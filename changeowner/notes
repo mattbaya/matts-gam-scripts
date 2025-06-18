@@ -1,0 +1,23 @@
+
+find-all-sharedwith-newowner-and-transfer.sh
+	# This script checks all files shared by $1 to $2 and transfers ownership to $2
+	# Also, if $3 is Y or y then rename the files with $1 included using filename_$1.pdf format
+
+
+----------
+for i in `cat jleamonfolders.txt`; do ./changeownersofallfilesinafolder.sh jleamon@example.edu kgutscho@example.edu $i >> jleamon-out.txt; done
+ ./changeownersofallfolders.sh krb3@example.edu mt13@example.edu 0B_99TXLNymQwNkZqdTU2eHhiVEEA
+
+
+gam user mt13@example.edu print filetree select 0B_99TXLNymQwNkZqdTU2eHhiVEE showownedby any fields owners,id
+
+"$GAM" update user milo suspended off
+
+
+for i in $(cat rdeveaux.csv); do OLDUSER=$(echo $i|awk -F, '{print $1}'); FILEID=$(echo $i|awk -F, '{print $2}'); ./changefileownership.sh $OLDUSER rdeveaux $FILEID;done
+
+while IFS=, read -r OLDUSER FILEID; do
+    ./changefileownership.sh "$(echo "${OLDUSER}" | tr -d '[:space:]')" "sfs4" "$(echo "${FILEID}" | tr -d '[:space:]')"
+done < sfs4.csv
+
+

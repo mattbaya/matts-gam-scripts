@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+#
+# This script changes the ownership of a file id ($3) from user $1 to $2
+#
+
+GAM="/root/bin/gamadv-x/gam"
+SCRIPTPATH="/opt/organization/mjb9/changeowner"
+# Set the variables
+echo $1 " " $2 " " $3
+OLD_OWNER="$(echo $1)"
+NEW_OWNER="$(echo $2)"
+FILE_ID="$(echo $3)"
+echo $OLD_OWNER " " $NEW_OWNER " " $FILE_ID
+echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+LOG="/opt/organization/mjb9/changeowner/logs/$OLD_OWNER-chown-to-$NEW_OWNER.csv"
+#FILENAME=$(/root/bin/gamadv-x/gam user $OLD_OWNER print fileinfo $FILE_ID name|grep "name:"|awk -F"name: " '{print $2}')
+FILENAME="Test Filename"
+SHAREDPATH="/opt/organization/mjb9/listshared/csv-files/${OLD_OWNER}_shared-files-with-path.csv"
+
+echo "----"
+echo "Changing ownership of $FILENAME $FILE_ID from $OLD_OWNER to $NEW_OWNER" 
+
+if [[ ! "$OLD_OWNER" == "$NEW_OWNER"* ]]; then
+echo "++++"
+	echo ${GAM}" user "${NEW_OWNER}" claim ownership "${FILE_ID}" filepath"
+echo "++++"
+	#$GAM "user "${NEW_OWNER}" claim ownership "${FILE_ID}" filepath >>"$SCRIPTPATH/logs/$OWNER-to-$NEW_OWNER-ownership-change-tree.csv"
+	$GAM user ${NEW_OWNER} claim ownership ${FILE_ID} filepath 
+echo "++++"
+    	echo "$FILE_ID,$OLD_OWNER,$NEW_OWNER,$(date +%Y-%m-%d-%H:%M),$FILENAME,$FILEPATH" >>$LOG
+    	echo "$FILE_ID,$OLD_OWNER,$NEW_OWNER,$(date +%Y-%m-%d-%H:%M),$FILENAME,$FILEPATH"
+    	echo "----"
+	tail -2 "$SCRIPTPATH/logs/$OWNER-to-$NEW_OWNER-ownership-change-tree.csv"|grep "Drive File:"
+else
+    	echo "$FILE_ID is already owned by $NEW_OWNER, skipping"
+    	exit 1
+fi
+echo "----------------------------------------------------------------"
