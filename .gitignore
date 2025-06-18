@@ -1,0 +1,8 @@
+# Ignore log files
+*.log
+
+# Ignore text files
+*.txt
+
+# Ignore CSV files
+*.csv
